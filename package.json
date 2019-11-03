@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@garpix/gengine": "/home/garpix/workPUH/game/vendor/garpix-gengine-v0.15.15 .tgz",
+    "@garpix/gengine": "c:\\Users\\Puh\\Desktop\\workin\\game3D\\vendor\\garpix-gengine-0.15.16.tgz",
     "node-sass": "^4.13.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

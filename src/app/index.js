@@ -6,181 +6,258 @@ import {
   Sky,
   Raycast,
   Box,
+  Fog,
   GLTF,
   AmbientLight,
   DirectionalLight
 } from "@garpix/gengine";
-// import CreateScene from "../Component/CreateScene";
+import Controller from "../Component/Сontrol";
+import Coordinat from "../Component/Coord";
 import Light from "../Component/Light";
 class App extends React.Component {
   constructor(props) {
     super();
-    this.walkAnimation = { clipName: "Armature|Walk" };
+    this.intervarTriger = null;
+    this.walkAnimationDefault = { clipName: "Default Take" };
+    this.walkAnimationRun = { clipName: "02_Sphere_bot_Run_Cycle" };
+    this.walkAnimationJump = { clipName: "07_Sphere_bot_Jump" };
     this.state = {
-      animation: this.walkAnimation,
-      sceneWidth: null,
-      sceneHeight: null,
-      camera: null,
-      scene: null,
-      renderer: null,
-      dom: null,
-      sun: null,
-      ground: null,
-      rollingGroundSphere: null,
-      heroSphere: null,
-      rollingSpeed: 0.008,
-      heroRollingSpeed: null,
-      worldRadius: 26,
-      heroRadius: 0.2,
-      sphericalHelper: null,
-      pathAngleValues: null,
-      heroBaseY: 1.8,
-      bounceValue: 0.1,
-      gravity: 0.005,
-      leftLane: -1,
-      rightLane: 1,
-      middleLane: 0,
-      currentLane: null,
-      clock: null,
-      jumping: null,
-      treeReleaseInterval: 0.5,
-      lastTreeReleaseTime: 0,
-      treesInPath: null,
-      treesPool: null,
-      particleGeometry: null,
-      particleCount: 20,
-      explosionPower: 1.06,
-      particles: null,
-      scoreText: null,
-      score: null,
-      hasCollided: null
+      progressLoadScene: null,
+      animation: this.walkAnimationDefault,
+      cameraPosition: null,
+      defaultCameraPosition: [
+        -0.08808457681541951,
+        6.638108246454423,
+        7.553589613725965
+      ],
+      defaultCameraRotation: [
+        -1.9246447908932862,
+        -0.18899892729634254,
+        -2.6710866210591657
+      ],
+      generateRotationBraun: [0, 0, 0],
+      heroPosition: [-0.003074992723398668, -1.6, 0.9359746908057779],
+      heroRotation: [-5, 0, 0],
+      runUp: false,
+      runDown: false,
+      runLeft: false,
+      runRight: false,
+      jump: false
     };
   }
-  update = e => {
-    //game loop
+  update = callback => {
+    let intervalTrigger = callback => {
+      console.log(this.state.generateRotationBraun);
+      return window.setInterval(() => {
+        callback();
+      }, 100);
+    };
+    this.intervarTriger = intervalTrigger(callback);
   };
-  createTreesPool = e => {};
-  addWorld = e => {};
-  addHero = e => {};
-  addLight = e => {};
-  addExplosion = e => {};
+  stopStep = e => {
+    window.clearInterval(this.intervarTriger);
+    this.setState({
+      animation: this.walkAnimationDefault
+    });
+  };
+  downStep = e => {
+    if (this.state.runDown) return;
+    if (this.state.jump) return;
+    this.setState({
+      animation: this.walkAnimationRun,
+      runUp: false,
+      runDown: true,
+      runLeft: false,
+      runRight: false
+    });
+    window.clearInterval(this.intervarTriger);
+    this.update(e => {
+      this.setState({
+        generateRotationBraun: [
+          (this.state.generateRotationBraun[0] -= 0.1),
+          this.state.generateRotationBraun[0],
+          this.state.generateRotationBraun[2]
+        ]
+      });
+    });
+  };
+  upStep = e => {
+    if (this.state.runUp) return;
+    if (this.state.jump) return;
+    this.setState({
+      animation: this.walkAnimationRun,
+      runUp: true,
+      runDown: false,
+      runLeft: false,
+      runRight: false
+    });
+    window.clearInterval(this.intervarTriger);
+    this.update(e => {
+      this.setState({
+        generateRotationBraun: [
+          (this.state.generateRotationBraun[0] += 0.1),
+          this.state.generateRotationBraun[0],
+          this.state.generateRotationBraun[2]
+        ]
+      });
+    });
+  };
+  rightStep = e => {
+    if (this.state.runRight) return;
+    if (this.state.jump) return;
+    this.setState({
+      animation: this.walkAnimationRun,
+      runUp: false,
+      runDown: false,
+      runLeft: false,
+      runRight: true
+    });
+    window.clearInterval(this.intervarTriger);
+    this.update(e => {
+      this.setState({
+        generateRotationBraun: [
+          this.state.generateRotationBraun[0],
+          (this.state.generateRotationBraun[1] += 0.1),
+          this.state.generateRotationBraun[1]
+        ]
+      });
+    });
+  };
+  leftStep = e => {
+    if (this.state.runLeft) return;
+    if (this.state.jump) return;
+    this.setState({
+      animation: this.walkAnimationRun,
+      runUp: false,
+      runDown: false,
+      runLeft: true,
+      runRight: false
+    });
+    window.clearInterval(this.intervarTriger);
+    this.update(e => {
+      this.setState({
+        generateRotationBraun: [
+          this.state.generateRotationBraun[0],
+          (this.state.generateRotationBraun[1] -= 0.1),
+          this.state.generateRotationBraun[1]
+        ]
+      });
+    });
+  };
+  heroJump = e => {
+    let prevAnimatiions = this.state.animation;
+    if (this.state.jump) return;
+    this.setState({
+      animation: this.walkAnimationJump,
+      jump: true
+    });
+    setTimeout(e => {
+      console.log(prevAnimatiions);
+      this.setState({
+        jump: false,
+        animation:
+          prevAnimatiions === this.walkAnimationRun
+            ? this.walkAnimationRun
+            : this.walkAnimationDefault
+      });
+    }, 2500);
+  };
   createScene = e => {
     //create scene
-    this.setState({
-      hasCollided: false,
-      score: 0,
-      treesInPath: [],
-      treesPool: [],
-      heroRollingSpeed:
-        (this.state.rollingSpeed * this.state.worldRadius) /
-        this.state.heroRadius /
-        5,
-      sphericalHelper: "test", //todo прицепить сферу
-      pathAngleValues: [1.52, 1.57, 1.62],
-      sceneWidth: window.innerWidth,
-      sceneHeight: window.innerHeight,
-      scene: "test", //todo  инициализация канваса или сцены
-      fog: "test", //todo инициализация тумана
-      camera: "test", //todo  инициализация камеры
-      renderer: "test" //todo renderer with transparent backdrop
-    });
-    this.createTreesPool();
-    this.addWorld();
-    this.addHero();
-    this.addLight();
-    this.addExplosion();
-    // hasCollided=false;
-    // score=0;
-    // treesInPath=[];
-    // treesPool=[];
-    // clock=new THREE.Clock();
-    // clock.start();
-    // heroRollingSpeed=(rollingSpeed*worldRadius/heroRadius)/5;
-    // sphericalHelper = new THREE.Spherical();
-    // pathAngleValues=[1.52,1.57,1.62];
-    //   sceneWidth=window.innerWidth;
-    //   sceneHeight=window.innerHeight;
-    //   scene = new THREE.Scene();//the 3d scene
-    //   scene.fog = new THREE.FogExp2( 0xf0fff0, 0.14 );
-    //   camera = new THREE.PerspectiveCamera( 60, sceneWidth / sceneHeight, 0.1, 1000 );//perspective camera
-    //   renderer = new THREE.WebGLRenderer({alpha:true});//renderer with transparent backdrop
-    //   renderer.setClearColor(0xfffafa, 1);
-    //   renderer.shadowMap.enabled = true;//enable shadow
-    //   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    //   renderer.setSize( sceneWidth, sceneHeight );
-    //   dom = document.getElementById('TutContainer');
-    // dom.appendChild(renderer.domElement);
-    // //stats = new Stats();
-    // //dom.appendChild(stats.dom);
-    // createTreesPool();
-    // addWorld();
-    // addHero();
-    // addLight();
-    // addExplosion();
-
-    // camera.position.z = 6.5;
-    // camera.position.y = 2.5;
-    // /*orbitControl = new THREE.OrbitControls( camera, renderer.domElement );//helper to rotate around in scene
-    // orbitControl.addEventListener( 'change', render );
-    // orbitControl.noKeys = true;
-    // orbitControl.noPan = true;
-    // orbitControl.enableZoom = false;
-    // orbitControl.minPolarAngle = 1.1;
-    // orbitControl.maxPolarAngle = 1.1;
-    // orbitControl.minAzimuthAngle = -0.2;
-    // orbitControl.maxAzimuthAngle = 0.2;
-    // */
-    // window.addEventListener('resize', onWindowResize, false);//resize callback
-
-    // document.onkeydown = handleKeyDown;
-
-    // scoreText = document.createElement('div');
-    // scoreText.style.position = 'absolute';
-    // //text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-    // scoreText.style.width = 100;
-    // scoreText.style.height = 100;
-    // //scoreText.style.backgroundColor = "blue";
-    // scoreText.innerHTML = "0";
-    // scoreText.style.top = 50 + 'px';
-    // scoreText.style.left = 10 + 'px';
-    // document.body.appendChild(scoreText);
-
-    // var infoText = document.createElement('div');
-    // infoText.style.position = 'absolute';
-    // infoText.style.width = 100;
-    // infoText.style.height = 100;
-    // infoText.style.backgroundColor = "yellow";
-    // infoText.innerHTML = "UP - Jump, Left/Right - Move";
-    // infoText.style.top = 10 + 'px';
-    // infoText.style.left = 10 + 'px';
-    // document.body.appendChild(infoText);
+    // setInterval(e => {
+    //   if (this.state.generateRotationBraun[0] >= 360) {
+    //     this.setState({
+    //       generateRotationBraun: [0, 0, 0]
+    //     });
+    //   }
+    //   this.setState({
+    //     generateRotationBraun: [
+    //       (this.state.generateRotationBraun[0] += 1),
+    //       (this.state.generateRotationBraun[0] -= 1),
+    //       0
+    //     ]
+    //   });
+    // }, 1000 / 15);
   };
   init = e => {
     this.createScene();
-    this.update();
   };
+  getCameraPosition = pos => {
+    this.setState({
+      cameraPosition: pos
+    });
+  };
+  componentDidMount() {
+    // this.init();
+  }
   render() {
     return (
       <div>
-        <Canvas fullscreen={true}>
+        {this.state.progressLoadScene < 100 ? (
+          <div className="scene-is__load">
+            <h1>{this.state.progressLoadScene}</h1>
+          </div>
+        ) : null}
+        <Canvas
+          fullscreen={true}
+          onLoadingProgress={progress => {
+            this.setState({
+              progressLoadScene: progress
+            });
+          }}
+        >
+          {/* Camera */}
           <PerspectiveCamera
             minDistance={1}
             maxDistance={2000}
-            position={[0, 5, 2]}
+            position={this.state.defaultCameraPosition}
+            rotation={[0, 0, 0]}
+            getCameraPositions={this.getCameraPosition}
           >
+            <Fog near={1} far={30} />
             <OrbitControls />
             <Raycast />
             <Sky url={"/static/textures/background.jpg"} />
           </PerspectiveCamera>
-          {/* {this.init()} */}
-          {/* <CreateScene /> */}
-          <Light />
-          <GLTF scale={[100, 100, 0]} animation={this.state.animation} url={"/static/scene.gltf"}  position={[0, -0.05, 0]}/>
-          <Box scale={[0.1, 0.1, 500]} color={"#0b4f1c"} position={[0, 0, 0]} />
-          <Box scale={[0.1, 0.1, 500]} color={"red"} position={[0, 0, 0]} rotation={[0,90,0]} />
-          <Box scale={[0.1, 0.1, 500]} color={"#fff"} position={[0, 0, 0]} rotation={[90,0,0]} />
-          <AmbientLight intensity={1} />
-          <DirectionalLight intensity={3} rotation={[0, 40, 0]} />
+          <Controller
+            callBackJump={this.heroJump}
+            callBackLeftStep={this.leftStep}
+            callBackRightStep={this.rightStep}
+            callBackUpStep={this.upStep}
+            callBackDownStep={this.downStep}
+            callBackStopStep={this.stopStep}
+          />
+          {/* hero */}
+          <GLTF
+            url={"/static/gltf/hero/scene.gltf"}
+            animation={this.state.animation}
+            position={this.state.heroPosition}
+            rotation={this.state.heroRotation}
+          />
+          {/* planet */}
+          <GLTF url={"/static/scene.gltf"} />
+          <GLTF
+            url={"/static/scene.gltf"}
+            position={[0, -100, 10]}
+            rotation={this.state.generateRotationBraun}
+          />
+          {/* Coordinate */}
+          <Box scale={[0.1, 0.1, 500]} color={"#0b4f1c"} />
+          <Box
+            scale={[0.1, 0.1, 500]}
+            color={"red"}
+            position={[0, 0, 0]}
+            rotation={[0, 90, 0]}
+          />
+          <Box
+            scale={[0.1, 0.1, 500]}
+            color={"#fff"}
+            position={[0, 0, 0]}
+            rotation={[90, 0, 0]}
+          />
+
+          <AmbientLight intensity={0.4} />
+          <DirectionalLight intensity={1} />
         </Canvas>
       </div>
     );
