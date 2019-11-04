@@ -150,7 +150,7 @@ class App extends React.Component {
       this.setState({
         generateRotationBraun: [
           this.state.generateRotationBraun[0],
-          (this.state.generateRotationBraun[1] -= 0.2),
+          (this.state.generateRotationBraun[1] -= 0.1),
           this.state.generateRotationBraun[1]
         ],
         threePositions: this.state.threePositions.map((el, i) => {
