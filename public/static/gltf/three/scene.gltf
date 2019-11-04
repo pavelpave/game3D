@@ -3,74 +3,74 @@
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 559,
+      "count": 1127,
       "max": [
-        1.0000002384185791,
-        1,
-        1
+        264.8636474609375,
+        788.46240234375,
+        336.44927978515625
       ],
       "min": [
-        -0.99999982118606567,
-        -1.0000003576278687,
-        -1
+        -287.31964111328125,
+        -51.253501892089844,
+        -312.26239013671875
       ],
       "type": "VEC3"
     },
     {
       "bufferView": 2,
-      "byteOffset": 6708,
+      "byteOffset": 13524,
       "componentType": 5126,
-      "count": 559,
+      "count": 1127,
       "max": [
+        0.99954074621200562,
         1,
-        1,
-        1
+        0.9999430775642395
       ],
       "min": [
+        -0.99955451488494873,
         -1,
-        -1,
-        -1
+        -0.99976801872253418
       ],
       "type": "VEC3"
     },
     {
       "bufferView": 3,
       "componentType": 5126,
-      "count": 559,
+      "count": 1127,
       "max": [
         1,
+        0.99969667196273804,
         1,
-        0.049126386642456055,
         1
       ],
       "min": [
         -1,
-        -1,
-        -0.049125988036394119,
-        1
+        -0.99925637245178223,
+        -0.99997717142105103,
+        -1
       ],
       "type": "VEC4"
     },
     {
       "bufferView": 1,
       "componentType": 5126,
-      "count": 559,
+      "count": 1127,
       "max": [
-        1.0000002384185791,
-        1
+        0.24070738255977631,
+        0.97764348983764648
       ],
       "min": [
-        0,
-        0
+        0.015427976846694946,
+        0.076802492141723633
       ],
       "type": "VEC2"
     },
     {
       "bufferView": 0,
       "componentType": 5125,
-      "count": 2880,
+      "count": 3246,
       "max": [
-        558
+        1126
       ],
       "min": [
         0
@@ -80,42 +80,42 @@
   ],
   "asset": {
     "extras": {
-      "author": "Madeele (https://sketchfab.com/Madeele)",
+      "author": "BitGem (https://sketchfab.com/bitgem)",
       "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
-      "source": "https://sketchfab.com/3d-models/groundstone-sphere-1c0f2b2e213348e6a760743a546dc7a6",
-      "title": "Ground//Stone Sphere"
+      "source": "https://sketchfab.com/3d-models/grassland-tree-proto-series-free-1539bad802904a619f4fe1f1694229b0",
+      "title": "Grassland Tree - Proto Series - Free"
     },
-    "generator": "Sketchfab-6.9.0",
+    "generator": "Sketchfab-5.68.0",
     "version": "2.0"
   },
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 11520,
+      "byteLength": 12984,
       "byteOffset": 0,
       "name": "floatBufferViews",
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteLength": 4472,
-      "byteOffset": 11520,
+      "byteLength": 9016,
+      "byteOffset": 12984,
       "byteStride": 8,
       "name": "floatBufferViews",
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 13416,
-      "byteOffset": 15992,
+      "byteLength": 27048,
+      "byteOffset": 22000,
       "byteStride": 12,
       "name": "floatBufferViews",
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 8944,
-      "byteOffset": 29408,
+      "byteLength": 18032,
+      "byteOffset": 49048,
       "byteStride": 16,
       "name": "floatBufferViews",
       "target": 34962
@@ -123,35 +123,27 @@
   ],
   "buffers": [
     {
-      "byteLength": 38352,
+      "byteLength": 67080,
       "uri": "scene.bin"
     }
   ],
   "images": [
     {
-      "uri": "textures/Scene_-_Root_baseColor.png"
+      "uri": "textures/trees_red_SC_mat_baseColor.png"
     },
     {
-      "uri": "textures/Scene_-_Root_metallicRoughness.png"
-    },
-    {
-      "uri": "textures/Scene_-_Root_normal.png"
+      "uri": "textures/trees_red_SC_mat_metallicRoughness.png"
     }
   ],
   "materials": [
     {
       "doubleSided": true,
-      "name": "Scene_-_Root",
-      "normalTexture": {
-        "index": 2,
-        "scale": 0.36147103658536583,
-        "texCoord": 0
-      },
-      "occlusionTexture": {
-        "index": 1,
-        "strength": 1,
-        "texCoord": 0
-      },
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "name": "trees_red_SC_mat",
       "pbrMetallicRoughness": {
         "baseColorFactor": [
           1,
@@ -174,7 +166,7 @@
   ],
   "meshes": [
     {
-      "name": "Sphere__0",
+      "name": "grassland_tree_SC_05_trees_red_SC_mat_0",
       "primitives": [
         {
           "attributes": {
@@ -231,13 +223,11 @@
         0,
         1
       ],
-      "name": "43c0c54a7c1a45e98bbaf46bbb404972.fbx"
+      "name": "a041216f2cca4f33b347bfc98844906f.fbx"
     },
     {
       "children": [
-        4,
-        7,
-        9
+        4
       ],
       "name": "RootNode"
     },
@@ -245,107 +235,11 @@
       "children": [
         5
       ],
-      "matrix": [
-        -29.08647719990347,
-        -5.5189064575668629,
-        -95.517119101714371,
-        0,
-        56.639309131094492,
-        79.467234285632031,
-        -21.839123978419661,
-        0,
-        77.110087759933748,
-        -60.452463565620441,
-        -19.988346967737169,
-        0,
-        407.62454223632812,
-        590.38623046875,
-        -100.54539489746094,
-        1
-      ],
-      "name": "Light"
-    },
-    {
-      "children": [
-        6
-      ],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        2.2204460492503131e-16,
-        1,
-        0,
-        0,
-        -1,
-        2.2204460492503131e-16,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
-      "name": ""
-    },
-    {
-      "name": ""
-    },
-    {
-      "children": [
-        8
-      ],
-      "matrix": [
-        -65.155832803290963,
-        -44.527135765708579,
-        -61.417030473735487,
-        0,
-        -32.40134137821245,
-        89.539574512336159,
-        -30.542088974418615,
-        0,
-        68.592054721299746,
-        -1.0718647115348782e-05,
-        -72.767633623962695,
-        0,
-        735.88916015625,
-        495.8309326171875,
-        692.5791015625,
-        1
-      ],
-      "name": "Camera"
-    },
-    {
-      "name": ""
-    },
-    {
-      "children": [
-        10
-      ],
-      "matrix": [
-        100,
-        0,
-        0,
-        0,
-        0,
-        -1.6292067939183141e-05,
-        -99.999999999998678,
-        0,
-        0,
-        99.999999999998678,
-        -1.6292067939183141e-05,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
-      "name": "Sphere"
+      "name": "grassland_tree_SC_05"
     },
     {
       "mesh": 0,
-      "name": "Sphere__0"
+      "name": "grassland_tree_SC_05_trees_red_SC_mat_0"
     }
   ],
   "samplers": [
@@ -373,10 +267,6 @@
     {
       "sampler": 0,
       "source": 1
-    },
-    {
-      "sampler": 0,
-      "source": 2
     }
   ]
 }

@@ -8,12 +8,11 @@ import {
   Box,
   Fog,
   GLTF,
+  DraggableFirstPersonControls,
   AmbientLight,
   DirectionalLight
 } from "@garpix/gengine";
 import Controller from "../Component/Сontrol";
-import Coordinat from "../Component/Coord";
-import Light from "../Component/Light";
 class App extends React.Component {
   constructor(props) {
     super();
@@ -26,9 +25,9 @@ class App extends React.Component {
       animation: this.walkAnimationDefault,
       cameraPosition: null,
       defaultCameraPosition: [
-        -0.08808457681541951,
-        6.638108246454423,
-        7.553589613725965
+        0.03056949447341314,
+        2.9624169111589174,
+        5.277336746765396
       ],
       defaultCameraRotation: [
         -1.9246447908932862,
@@ -42,7 +41,9 @@ class App extends React.Component {
       runDown: false,
       runLeft: false,
       runRight: false,
-      jump: false
+      jump: false,
+      maxPoollThree: 6,
+      threePositions: []
     };
   }
   update = callback => {
@@ -55,6 +56,7 @@ class App extends React.Component {
     this.intervarTriger = intervalTrigger(callback);
   };
   stopStep = e => {
+    if (this.state.jump) return;
     window.clearInterval(this.intervarTriger);
     this.setState({
       animation: this.walkAnimationDefault
@@ -77,7 +79,10 @@ class App extends React.Component {
           (this.state.generateRotationBraun[0] -= 0.1),
           this.state.generateRotationBraun[0],
           this.state.generateRotationBraun[2]
-        ]
+        ],
+        threePositions: this.state.threePositions.map((el, i) => {
+          return [(el[0] -= 0.01), el[1], (el[2] -= 0.2)];
+        })
       });
     });
   };
@@ -98,7 +103,10 @@ class App extends React.Component {
           (this.state.generateRotationBraun[0] += 0.1),
           this.state.generateRotationBraun[0],
           this.state.generateRotationBraun[2]
-        ]
+        ],
+        threePositions: this.state.threePositions.map((el, i) => {
+          return [(el[0] += 0.01), el[1], (el[2] += 0.1)];
+        })
       });
     });
   };
@@ -119,7 +127,10 @@ class App extends React.Component {
           this.state.generateRotationBraun[0],
           (this.state.generateRotationBraun[1] += 0.1),
           this.state.generateRotationBraun[1]
-        ]
+        ],
+        threePositions: this.state.threePositions.map((el, i) => {
+          return [(el[0] -= 0.15), el[1], (el[2] -= 0.01)];
+        })
       });
     });
   };
@@ -140,7 +151,10 @@ class App extends React.Component {
           this.state.generateRotationBraun[0],
           (this.state.generateRotationBraun[1] -= 0.1),
           this.state.generateRotationBraun[1]
-        ]
+        ],
+        threePositions: this.state.threePositions.map((el, i) => {
+          return [(el[0] += 0.15), el[1], (el[2] += 0.01)];
+        })
       });
     });
   };
@@ -162,35 +176,37 @@ class App extends React.Component {
       });
     }, 2500);
   };
-  createScene = e => {
-    //create scene
-    // setInterval(e => {
-    //   if (this.state.generateRotationBraun[0] >= 360) {
-    //     this.setState({
-    //       generateRotationBraun: [0, 0, 0]
-    //     });
-    //   }
-    //   this.setState({
-    //     generateRotationBraun: [
-    //       (this.state.generateRotationBraun[0] += 1),
-    //       (this.state.generateRotationBraun[0] -= 1),
-    //       0
-    //     ]
-    //   });
-    // }, 1000 / 15);
-  };
-  init = e => {
-    this.createScene();
-  };
   getCameraPosition = pos => {
     this.setState({
       cameraPosition: pos
     });
   };
+  generateRandomInteger = (min, max) => {
+    return Math.floor(min + Math.random() * (max + 1 - min));
+  };
+  renderThree = e => {
+    return this.state.threePositions.map((el, i) => {
+      return (
+        <GLTF
+          key={i}
+          url={"/static/gltf/three/scene.gltf"}
+          position={[...el]}
+          scale={[0.03, 0.03, 0.03]}
+        />
+      );
+    });
+  };
   componentDidMount() {
-    // this.init();
+    for (let i = 0; i < this.state.maxPoollThree; i++) {
+      this.state.threePositions.push([
+        this.generateRandomInteger(-10, 10),
+        -4,
+        this.generateRandomInteger(-10, 10)
+      ]);
+    }
   }
   render() {
+    console.log([...this.state.threePositions], "three");
     return (
       <div>
         {this.state.progressLoadScene < 100 ? (
@@ -214,8 +230,9 @@ class App extends React.Component {
             rotation={[0, 0, 0]}
             getCameraPositions={this.getCameraPosition}
           >
-            <Fog near={1} far={30} />
+            <Fog near={3} far={30} />
             <OrbitControls />
+            {/* <DraggableFirstPersonControls sensitivity={75}/> */}
             <Raycast />
             <Sky url={"/static/textures/background.jpg"} />
           </PerspectiveCamera>
@@ -234,6 +251,8 @@ class App extends React.Component {
             position={this.state.heroPosition}
             rotation={this.state.heroRotation}
           />
+          {/* three */}
+          {this.renderThree()}
           {/* planet */}
           <GLTF url={"/static/scene.gltf"} />
           <GLTF
@@ -257,7 +276,7 @@ class App extends React.Component {
           />
 
           <AmbientLight intensity={0.4} />
-          <DirectionalLight intensity={1} />
+          <DirectionalLight intensity={0.3} />
         </Canvas>
       </div>
     );
