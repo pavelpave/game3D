@@ -4,8 +4,10 @@
   "private": true,
   "dependencies": {
     "@garpix/gengine": "c:\\Users\\Puh\\Desktop\\workin\\game3D\\vendor\\garpix-gengine-0.15.16.tgz",
+    "bootstrap": "^4.3.1",
     "node-sass": "^4.13.0",
     "react": "^16.9.0",
+    "react-bootstrap": "^1.0.0-beta.14",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1",
     "three": "^0.107.0"

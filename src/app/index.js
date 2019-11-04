@@ -13,6 +13,7 @@ import {
   DirectionalLight
 } from "@garpix/gengine";
 import Controller from "../Component/Сontrol";
+import PreViwe from "../Component/PreViwe";
 class App extends React.Component {
   constructor(props) {
     super();
@@ -42,7 +43,7 @@ class App extends React.Component {
       runLeft: false,
       runRight: false,
       jump: false,
-      maxPoollThree: 6,
+      maxPoollThree: 100,
       threePositions: []
     };
   }
@@ -76,12 +77,12 @@ class App extends React.Component {
     this.update(e => {
       this.setState({
         generateRotationBraun: [
-          (this.state.generateRotationBraun[0] -= 0.1),
+          (this.state.generateRotationBraun[0] -= 0.2),
           this.state.generateRotationBraun[0],
           this.state.generateRotationBraun[2]
         ],
         threePositions: this.state.threePositions.map((el, i) => {
-          return [(el[0] -= 0.01), el[1], (el[2] -= 0.2)];
+          return [(el[0] -= 0.01), el[1], (el[2] -= 0.1)];
         })
       });
     });
@@ -100,7 +101,7 @@ class App extends React.Component {
     this.update(e => {
       this.setState({
         generateRotationBraun: [
-          (this.state.generateRotationBraun[0] += 0.1),
+          (this.state.generateRotationBraun[0] += 0.2),
           this.state.generateRotationBraun[0],
           this.state.generateRotationBraun[2]
         ],
@@ -125,7 +126,7 @@ class App extends React.Component {
       this.setState({
         generateRotationBraun: [
           this.state.generateRotationBraun[0],
-          (this.state.generateRotationBraun[1] += 0.1),
+          (this.state.generateRotationBraun[1] += 0.2),
           this.state.generateRotationBraun[1]
         ],
         threePositions: this.state.threePositions.map((el, i) => {
@@ -149,7 +150,7 @@ class App extends React.Component {
       this.setState({
         generateRotationBraun: [
           this.state.generateRotationBraun[0],
-          (this.state.generateRotationBraun[1] -= 0.1),
+          (this.state.generateRotationBraun[1] -= 0.2),
           this.state.generateRotationBraun[1]
         ],
         threePositions: this.state.threePositions.map((el, i) => {
@@ -163,7 +164,11 @@ class App extends React.Component {
     if (this.state.jump) return;
     this.setState({
       animation: this.walkAnimationJump,
-      jump: true
+      jump: true,
+      runUp: false,
+      runDown: false,
+      runLeft: false,
+      runRight: false
     });
     setTimeout(e => {
       console.log(prevAnimatiions);
@@ -199,19 +204,18 @@ class App extends React.Component {
   componentDidMount() {
     for (let i = 0; i < this.state.maxPoollThree; i++) {
       this.state.threePositions.push([
-        this.generateRandomInteger(-10, 10),
+        this.generateRandomInteger(-100, 100),
         -4,
-        this.generateRandomInteger(-10, 10)
+        this.generateRandomInteger(-100, 100)
       ]);
     }
   }
   render() {
-    console.log([...this.state.threePositions], "three");
     return (
       <div>
         {this.state.progressLoadScene < 100 ? (
           <div className="scene-is__load">
-            <h1>{this.state.progressLoadScene}</h1>
+            <PreViwe now={this.state.progressLoadScene} />
           </div>
         ) : null}
         <Canvas
@@ -225,14 +229,14 @@ class App extends React.Component {
           {/* Camera */}
           <PerspectiveCamera
             minDistance={1}
-            maxDistance={2000}
+            maxDistance={100}
             position={this.state.defaultCameraPosition}
             rotation={[0, 0, 0]}
             getCameraPositions={this.getCameraPosition}
           >
             <Fog near={3} far={30} />
-            <OrbitControls />
-            {/* <DraggableFirstPersonControls sensitivity={75}/> */}
+            {/* <OrbitControls /> */}
+            <DraggableFirstPersonControls sensitivity={75} />
             <Raycast />
             <Sky url={"/static/textures/background.jpg"} />
           </PerspectiveCamera>
